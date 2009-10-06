@@ -846,7 +846,7 @@ END
       filters = names.split(':').map do |name|
         raise Error.new("Invalid filter name \":#{name}\".") unless name =~ /^\w+$/
         raise Error.new("Filter \"#{name}\" is not defined.") unless filter = Filters.defined[name]
-        Filters.defined[name]
+        filter
       end.reverse
       push_and_tabulate([:filtered, filters])
       @flat = true
