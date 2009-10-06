@@ -5,6 +5,10 @@
 
 ## 2.4.0 (Unreleased)
 
+* Allow multiple filters to be composed in Haml - first apply
+  the rightmost one, then work your way left.
+  (thanks to [Justin Henry](http://hi.im/justinhenry) and [Casey Rosenthal](http://hi.im/clr) via [PROGMATICA](http://progmatica.com)
+
 ### Object Reference Customization
 
 It's now possible to customize the name used for {file:HAML_REFERENCE.md#object_reference_ object reference}

@@ -420,8 +420,15 @@ END
     end
 
     # Closes a filtered block.
-    def close_filtered(filter)
-      filter.internal_compile(self, @filter_buffer)
+    def close_filtered(filters)
+      # Iterate through all of the filters except for the last one,
+      # and modify the @filter_buffer with each filter's render method.
+      # Then pass the modified @filter_buffer to the last filter's
+      # internal_compile method.
+      filters[0..-2].each do |filter|
+        @filter_buffer = filter.render_with_options( @filter_buffer, self.options )
+      end
+      filters.last.internal_compile( self, @filter_buffer )
       @flat = false
       @flat_spaces = nil
       @filter_buffer = nil
@@ -835,11 +842,13 @@ END
     end
 
     # Starts a filtered block.
-    def start_filtered(name)
-      raise Error.new("Invalid filter name \":#{name}\".") unless name =~ /^\w+$/
-      raise Error.new("Filter \"#{name}\" is not defined.") unless filter = Filters.defined[name]
-
-      push_and_tabulate([:filtered, filter])
+    def start_filtered(names)
+      filters = names.split( ':' ).collect do |name|
+        raise Error.new("Invalid filter name \":#{name}\".") unless name =~ /^\w+$/
+        raise Error.new("Filter \"#{name}\" is not defined.") unless filter = Filters.defined[name]
+        Filters.defined[name]
+      end.reverse
+      push_and_tabulate([:filtered, filters])
       @flat = true
       @filter_buffer = String.new
 
