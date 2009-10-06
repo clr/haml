@@ -426,9 +426,9 @@ END
       # Then pass the modified @filter_buffer to the last filter's
       # internal_compile method.
       filters[0..-2].each do |filter|
-        @filter_buffer = filter.render_with_options( @filter_buffer, self.options )
+        @filter_buffer = filter.render_with_options(@filter_buffer, self.options)
       end
-      filters.last.internal_compile( self, @filter_buffer )
+      filters.last.internal_compile(self, @filter_buffer)
       @flat = false
       @flat_spaces = nil
       @filter_buffer = nil
@@ -843,7 +843,7 @@ END
 
     # Starts a filtered block.
     def start_filtered(names)
-      filters = names.split( ':' ).collect do |name|
+      filters = names.split(':').map do |name|
         raise Error.new("Invalid filter name \":#{name}\".") unless name =~ /^\w+$/
         raise Error.new("Filter \"#{name}\" is not defined.") unless filter = Filters.defined[name]
         Filters.defined[name]
